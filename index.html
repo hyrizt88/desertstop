@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dessert Stop Restaurant - Menu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+            <button class="lang-btn active" data-lang="ms">
+                <span class="flag">🇲🇾</span> BM
+            </button>
+            <button class="lang-btn" data-lang="en">
+                <span class="flag">🇺🇸</span> EN
+            </button>
+            <button class="lang-btn" data-lang="zh">
+                <span class="flag">🇨🇳</span> 中文
+            </button>
+            <button class="lang-btn" data-lang="ta">
+                <span class="flag">🇮🇳</span> தமிழ்
+            </button>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1 data-translate="restaurant_name">Dessert Stop Restaurant</h1>
+            </div>
+            <p class="motto" data-translate="motto">"Makanan Enak Dari Hati"</p>
+            <div class="owner-info">
+                <p><i class="fas fa-user"></i> <span data-translate="owner">Pemilik</span>: Faris Fox</p>
+            </div>
+        </header>
+
+        <!-- User Registration Section -->
+        <section class="registration-section" id="registrationSection">
+            <div class="registration-info">
+                <h2><i class="fas fa-user-plus"></i> <span data-translate="join_loyalty">Sertai Program Setia</span></h2>
+                <p data-translate="registration_desc">Daftar dengan nombor telefon anda untuk mengesan pembelian dan dapatkan kupon percuma!</p>
+                <div class="registration-form">
+                    <div class="form-group">
+                        <label for="userName" data-translate="your_name">Nama Anda:</label>
+                        <input type="text" id="userName" placeholder="Masukkan nama anda" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPhone" data-translate="phone_number">Nombor Telefon:</label>
+                        <input type="tel" id="userPhone" placeholder="Contoh: 012-345-6789" required>
+                    </div>
+                    <button class="btn-register" onclick="registerUser()">
+                        <i class="fas fa-user-plus"></i> <span data-translate="register_now">Daftar Sekarang</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Profile Section -->
+        <section class="user-profile-section" id="userProfileSection" style="display: none;">
+            <div class="user-info">
+                <h2><i class="fas fa-user-circle"></i> <span data-translate="welcome_back">Selamat Datang Kembali</span></h2>
+                <div class="user-details">
+                    <p><i class="fas fa-user"></i> <span data-translate="name">Nama</span>: <span id="displayUserName"></span></p>
+                    <p><i class="fas fa-phone"></i> <span data-translate="phone">Telefon</span>: <span id="displayUserPhone"></span></p>
+                    <button class="btn-logout" onclick="logoutUser()">
+                        <i class="fas fa-sign-out-alt"></i> <span data-translate="logout">Log Keluar</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loyalty Program -->
+        <section class="loyalty-section" id="loyaltySection" style="display: none;">
+            <div class="loyalty-info">
+                <h2><i class="fas fa-gift"></i> <span data-translate="loyalty_program">Program Setia</span></h2>
+                <div class="loyalty-details">
+                    <div class="loyalty-card">
+                        <div class="loyalty-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="loyalty-text">
+                            <h3 data-translate="buy_3_get_free">Beli 3 Kali = Free Drinks + Cake 1 Slice</h3>
+                            <p data-translate="loyalty_desc">Setiap pembelian ke-3, dapatkan minuman percuma + sepotong kek!</p>
+                        </div>
+                    </div>
+                    <div class="loyalty-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="loyaltyProgress"></div>
+                        </div>
+                        <p class="progress-text">
+                            <span data-translate="purchases">Pembelian</span>: <span id="purchaseCount">0</span>/3
+                        </p>
+                    </div>
+                    <div class="coupon-section" id="couponSection" style="display: none;">
+                        <div class="coupon-card">
+                            <div class="coupon-header">
+                                <i class="fas fa-ticket-alt"></i>
+                                <h3 data-translate="free_coupon">Kupon Percuma</h3>
+                            </div>
+                            <div class="coupon-content">
+                                <p data-translate="coupon_desc">Tebus kupon ini untuk dapatkan:</p>
+                                <ul>
+                                    <li data-translate="free_drink">Minuman percuma (pilihan anda)</li>
+                                    <li data-translate="free_cake_slice">Sepotong kek (pilihan anda)</li>
+                                </ul>
+                                <button class="btn-redeem" onclick="redeemCoupon()">
+                                    <i class="fas fa-gift"></i> <span data-translate="redeem_now">Tebus Sekarang</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <nav class="nav-menu">
+            <button class="nav-btn active" data-category="all" data-translate="all_menu">Semua Menu</button>
+            <button class="nav-btn" data-category="kek" data-translate="cakes">Kek</button>
+            <button class="nav-btn" data-category="goreng" data-translate="fried_food">Masakan Goreng</button>
+            <button class="nav-btn" data-category="panas" data-translate="hot_food">Masakan Panas</button>
+            <button class="nav-btn" data-category="breakfast" data-translate="breakfast">Sarapan</button>
+            <button class="nav-btn" data-category="roti" data-translate="bread">Roti</button>
+            <button class="nav-btn" data-category="minuman" data-translate="drinks">Minuman</button>
+        </nav>
+
+        <!-- Order Summary -->
+        <div class="order-summary" id="orderSummary" style="display: none;">
+            <h3><i class="fas fa-shopping-cart"></i> <span data-translate="your_order">Pesanan Anda</span></h3>
+            <div id="orderItems"></div>
+            <div class="order-total">
+                <strong data-translate="total">Jumlah</strong>: RM <span id="orderTotal">0.00</span>
+            </div>
+            <div class="order-actions">
+                <button class="btn-clear" onclick="clearOrder()">
+                    <i class="fas fa-trash"></i> <span data-translate="clear">Kosongkan</span>
+                </button>
+                <button class="btn-order" onclick="placeOrder()">
+                    <i class="fas fa-paper-plane"></i> <span data-translate="place_order">Buat Pesanan</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Items -->
+        <main class="menu-container">
+            <!-- Kek Section -->
+            <div class="menu-item" data-category="kek" data-name="Kek Coklat" data-price="15.00">
+                <div class="item-image">
+                    <i class="fas fa-birthday-cake"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="chocolate_cake">Kek Coklat</h3>
+                    <p class="description" data-translate="chocolate_cake_desc">Kek coklat lembut dengan lapisan krim</p>
+                    <p class="price">RM 15.00</p>
+                    <button class="btn-add" onclick="addToOrder('Kek Coklat', 15.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="kek" data-name="Kek Vanilla" data-price="12.00">
+                <div class="item-image">
+                    <i class="fas fa-birthday-cake"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="vanilla_cake">Kek Vanilla</h3>
+                    <p class="description" data-translate="vanilla_cake_desc">Kek vanilla klasik dengan buttercream</p>
+                    <p class="price">RM 12.00</p>
+                    <button class="btn-add" onclick="addToOrder('Kek Vanilla', 12.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="kek" data-name="Kek Red Velvet" data-price="18.00">
+                <div class="item-image">
+                    <i class="fas fa-birthday-cake"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="red_velvet_cake">Kek Red Velvet</h3>
+                    <p class="description" data-translate="red_velvet_cake_desc">Kek merah dengan cream cheese frosting</p>
+                    <p class="price">RM 18.00</p>
+                    <button class="btn-add" onclick="addToOrder('Kek Red Velvet', 18.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Masakan Goreng Section -->
+            <div class="menu-item" data-category="goreng" data-name="Ayam Goreng" data-price="8.50">
+                <div class="item-image">
+                    <i class="fas fa-drumstick-bite"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="fried_chicken">Ayam Goreng</h3>
+                    <p class="description" data-translate="fried_chicken_desc">Ayam goreng rangup dengan rempah khas</p>
+                    <p class="price">RM 8.50</p>
+                    <button class="btn-add" onclick="addToOrder('Ayam Goreng', 8.50)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="goreng" data-name="Ikan Goreng" data-price="12.00">
+                <div class="item-image">
+                    <i class="fas fa-fish"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="fried_fish">Ikan Goreng</h3>
+                    <p class="description" data-translate="fried_fish_desc">Ikan goreng dengan sambal belacan</p>
+                    <p class="price">RM 12.00</p>
+                    <button class="btn-add" onclick="addToOrder('Ikan Goreng', 12.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="goreng" data-name="Udang Goreng" data-price="15.00">
+                <div class="item-image">
+                    <i class="fas fa-shrimp"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="fried_prawns">Udang Goreng</h3>
+                    <p class="description" data-translate="fried_prawns_desc">Udang goreng tepung dengan sos cili</p>
+                    <p class="price">RM 15.00</p>
+                    <button class="btn-add" onclick="addToOrder('Udang Goreng', 15.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Masakan Panas Section -->
+            <div class="menu-item" data-category="panas" data-name="Nasi Goreng" data-price="6.50">
+                <div class="item-image">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="fried_rice">Nasi Goreng</h3>
+                    <p class="description" data-translate="fried_rice_desc">Nasi goreng dengan telur dan sayur</p>
+                    <p class="price">RM 6.50</p>
+                    <button class="btn-add" onclick="addToOrder('Nasi Goreng', 6.50)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="panas" data-name="Mee Goreng" data-price="7.00">
+                <div class="item-image">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="fried_noodles">Mee Goreng</h3>
+                    <p class="description" data-translate="fried_noodles_desc">Mee goreng dengan udang dan sayur</p>
+                    <p class="price">RM 7.00</p>
+                    <button class="btn-add" onclick="addToOrder('Mee Goreng', 7.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="panas" data-name="Kari Ayam" data-price="9.00">
+                <div class="item-image">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="chicken_curry">Kari Ayam</h3>
+                    <p class="description" data-translate="chicken_curry_desc">Kari ayam dengan nasi putih</p>
+                    <p class="price">RM 9.00</p>
+                    <button class="btn-add" onclick="addToOrder('Kari Ayam', 9.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Breakfast Section -->
+            <div class="menu-item" data-category="breakfast" data-name="Telur Goreng" data-price="4.50">
+                <div class="item-image">
+                    <i class="fas fa-egg"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="fried_egg">Telur Goreng</h3>
+                    <p class="description" data-translate="fried_egg_desc">Telur goreng dengan roti bakar</p>
+                    <p class="price">RM 4.50</p>
+                    <button class="btn-add" onclick="addToOrder('Telur Goreng', 4.50)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="breakfast" data-name="Roti Bakar" data-price="3.00">
+                <div class="item-image">
+                    <i class="fas fa-bread-slice"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="toast_bread">Roti Bakar</h3>
+                    <p class="description" data-translate="toast_bread_desc">Roti bakar dengan mentega dan kaya</p>
+                    <p class="price">RM 3.00</p>
+                    <button class="btn-add" onclick="addToOrder('Roti Bakar', 3.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="breakfast" data-name="Set Sarapan" data-price="8.00">
+                <div class="item-image">
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="breakfast_set">Set Sarapan</h3>
+                    <p class="description" data-translate="breakfast_set_desc">Telur, roti bakar, dan kopi</p>
+                    <p class="price">RM 8.00</p>
+                    <button class="btn-add" onclick="addToOrder('Set Sarapan', 8.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Roti Section -->
+            <div class="menu-item" data-category="roti" data-name="Roti Canai" data-price="2.50">
+                <div class="item-image">
+                    <i class="fas fa-bread-slice"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="roti_canai">Roti Canai</h3>
+                    <p class="description" data-translate="roti_canai_desc">Roti canai dengan kari dhal</p>
+                    <p class="price">RM 2.50</p>
+                    <button class="btn-add" onclick="addToOrder('Roti Canai', 2.50)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="roti" data-name="Roti Telur" data-price="3.50">
+                <div class="item-image">
+                    <i class="fas fa-bread-slice"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="roti_telur">Roti Telur</h3>
+                    <p class="description" data-translate="roti_telur_desc">Roti dengan telur dan bawang</p>
+                    <p class="price">RM 3.50</p>
+                    <button class="btn-add" onclick="addToOrder('Roti Telur', 3.50)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="roti" data-name="Roti Sardin" data-price="4.00">
+                <div class="item-image">
+                    <i class="fas fa-bread-slice"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="roti_sardin">Roti Sardin</h3>
+                    <p class="description" data-translate="roti_sardin_desc">Roti dengan sardin dan bawang</p>
+                    <p class="price">RM 4.00</p>
+                    <button class="btn-add" onclick="addToOrder('Roti Sardin', 4.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Minuman Section -->
+            <div class="menu-item" data-category="minuman" data-name="Kopi O" data-price="2.50">
+                <div class="item-image">
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="kopi_o">Kopi O</h3>
+                    <p class="description" data-translate="kopi_o_desc">Kopi hitam tradisional</p>
+                    <p class="price">RM 2.50</p>
+                    <button class="btn-add" onclick="addToOrder('Kopi O', 2.50)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="minuman" data-name="Teh Tarik" data-price="3.00">
+                <div class="item-image">
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="teh_tarik">Teh Tarik</h3>
+                    <p class="description" data-translate="teh_tarik_desc">Teh tarik dengan susu pekat</p>
+                    <p class="price">RM 3.00</p>
+                    <button class="btn-add" onclick="addToOrder('Teh Tarik', 3.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="minuman" data-name="Air Limau" data-price="2.00">
+                <div class="item-image">
+                    <i class="fas fa-glass-whiskey"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="lime_water">Air Limau</h3>
+                    <p class="description" data-translate="lime_water_desc">Air limau nipis segar</p>
+                    <p class="price">RM 2.00</p>
+                    <button class="btn-add" onclick="addToOrder('Air Limau', 2.00)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-item" data-category="minuman" data-name="Sirap Bandung" data-price="3.50">
+                <div class="item-image">
+                    <i class="fas fa-glass-whiskey"></i>
+                </div>
+                <div class="item-details">
+                    <h3 data-translate="sirap_bandung">Sirap Bandung</h3>
+                    <p class="description" data-translate="sirap_bandung_desc">Sirap bandung dengan susu</p>
+                    <p class="price">RM 3.50</p>
+                    <button class="btn-add" onclick="addToOrder('Sirap Bandung', 3.50)">
+                        <i class="fas fa-plus"></i> <span data-translate="add">Tambah</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Payment Information -->
+        <section class="payment-section">
+            <div class="payment-info">
+                <h2><i class="fas fa-credit-card"></i> <span data-translate="payment_info">Maklumat Pembayaran</span></h2>
+                <div class="bank-details">
+                    <div class="bank-item">
+                        <h3><i class="fab fa-maybank"></i> Maybank</h3>
+                        <p><strong data-translate="account">Akaun</strong>: 1234-5678-9012</p>
+                        <p><strong data-translate="name">Nama</strong>: FARIS FOX</p>
+                    </div>
+                    <div class="bank-item">
+                        <h3><i class="fas fa-university"></i> CIMB Bank</h3>
+                        <p><strong data-translate="account">Akaun</strong>: 8765-4321-0987</p>
+                        <p><strong data-translate="name">Nama</strong>: FARIS FOX</p>
+                    </div>
+                    <div class="bank-item">
+                        <h3><i class="fas fa-mobile-alt"></i> Touch 'n Go</h3>
+                        <p><strong>ID</strong>: 0123456789</p>
+                        <p><strong data-translate="name">Nama</strong>: FARIS FOX</p>
+                    </div>
+                </div>
+                <div class="payment-note">
+                    <p><i class="fas fa-info-circle"></i> <strong data-translate="note">Nota</strong>: <span data-translate="payment_note">Sila hantar bukti pembayaran melalui WhatsApp selepas membuat pembayaran.</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact & Ordering Section -->
+        <section class="contact-section">
+            <div class="contact-info">
+                <h2><i class="fas fa-phone"></i> <span data-translate="contact_ordering">Tempahan & Pertanyaan</span></h2>
+                <p data-translate="contact_desc">Untuk tempahan atau pertanyaan, sila hubungi:</p>
+                <div class="contact-details">
+                    <p><i class="fab fa-whatsapp"></i> WhatsApp: 012-345-6789</p>
+                    <p><i class="fas fa-phone"></i> <span data-translate="phone">Telefon</span>: 012-345-6789</p>
+                    <p><i class="fas fa-envelope"></i> Email: info@dessertstop.com</p>
+                    <p><i class="fas fa-clock"></i> <span data-translate="opening_hours">Buka</span>: 7:00 AM - 10:00 PM</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Dessert Stop Restaurant. <span data-translate="all_rights_reserved">Semua hak cipta terpelihara.</span></p>
+            <p data-translate="made_with_love">Dibuat dengan <i class="fas fa-heart"></i> oleh Faris Fox</p>
+        </footer>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-shopping-cart"></i> <span data-translate="place_order">Buat Pesanan</span></h2>
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="customerName" data-translate="your_name">Nama Anda:</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone" data-translate="phone_number">Nombor Telefon:</label>
+                    <input type="tel" id="customerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryAddress" data-translate="delivery_address">Alamat Penghantaran:</label>
+                    <textarea id="deliveryAddress" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryTime" data-translate="delivery_time">Masa Penghantaran:</label>
+                    <input type="datetime-local" id="deliveryTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod" data-translate="payment_method">Kaedah Pembayaran:</label>
+                    <select id="paymentMethod" required>
+                        <option value="" data-translate="select_payment">Pilih kaedah pembayaran</option>
+                        <option value="maybank">Maybank</option>
+                        <option value="cimb">CIMB Bank</option>
+                        <option value="tng">Touch 'n Go</option>
+                    </select>
+                </div>
+                <div class="order-summary-modal">
+                    <h3 data-translate="order_summary">Ringkasan Pesanan:</h3>
+                    <div id="modalOrderItems"></div>
+                    <div class="total-amount">
+                        <strong data-translate="total">Jumlah</strong>: RM <span id="modalOrderTotal">0.00</span>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()" data-translate="cancel">Batal</button>
+                    <button type="submit" class="btn-confirm" data-translate="send_to_whatsapp">Hantar Pesanan ke WhatsApp</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Coupon Modal -->
+    <div id="couponModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-gift"></i> <span data-translate="redeem_coupon">Tebus Kupon</span></h2>
+            <div class="coupon-redeem-form">
+                <div class="coupon-details">
+                    <h3 data-translate="free_rewards">Hadiah Percuma</h3>
+                    <p data-translate="choose_free_items">Pilih item percuma anda:</p>
+                </div>
+                <div class="free-items-selection">
+                    <div class="free-drink-section">
+                        <h4 data-translate="free_drink_choice">Pilih Minuman Percuma:</h4>
+                        <select id="freeDrinkChoice">
+                            <option value="Kopi O">Kopi O</option>
+                            <option value="Teh Tarik">Teh Tarik</option>
+                            <option value="Air Limau">Air Limau</option>
+                            <option value="Sirap Bandung">Sirap Bandung</option>
+                        </select>
+                    </div>
+                    <div class="free-cake-section">
+                        <h4 data-translate="free_cake_choice">Pilih Kek Percuma:</h4>
+                        <select id="freeCakeChoice">
+                            <option value="Kek Coklat">Kek Coklat</option>
+                            <option value="Kek Vanilla">Kek Vanilla</option>
+                            <option value="Kek Red Velvet">Kek Red Velvet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="coupon-note">
+                    <p><i class="fas fa-info-circle"></i> <span data-translate="coupon_note">Kupon ini akan ditambah ke dalam pesanan anda dan akan dihantar bersama pesanan lain.</span></p>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeCouponModal()" data-translate="cancel">Batal</button>
+                    <button type="button" class="btn-confirm" onclick="confirmRedeemCoupon()" data-translate="add_to_order">Tambah ke Pesanan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
